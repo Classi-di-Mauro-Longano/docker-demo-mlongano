@@ -4,17 +4,40 @@
 
 Il file `src/app.js` è il punto di ingresso dell'applicazione server.
 
+### Middleware Globale
+
+L'applicazione utilizza i seguenti middleware per la gestione delle richieste:
+
+- **CORS**: Abilita le richieste cross-origin.
+- **Body Parsing**: Supporto per payload JSON e URL-encoded (limite 10kb).
+
 ### Configurazione
 
 Il server viene configurato tramite le seguenti variabili d'ambiente:
 
-| Variabile  | Default       | Descrizione                                         |
-|------------|---------------|-----------------------------------------------------|
-| `PORT`     | `3000`        | Porta di ascolto del server HTTP                    |
-| `HOST`     | `0.0.0.0`     | Interfaccia di rete di ascolto                      |
-| `NODE_ENV` | `development` | Ambiente di esecuzione (`development`/`production`) |
+| Variabile     | Default       | Descrizione                                         |
+|---------------|---------------|-----------------------------------------------------|
+| `PORT`        | `3000`        | Porta di ascolto del server HTTP                    |
+| `HOST`        | `0.0.0.0`     | Interfaccia di rete di ascolto                      |
+| `NODE_ENV`    | `development` | Ambiente di esecuzione (`development`/`production`) |
+| `CORS_ORIGIN` | `*`           | Origine permessa per le richieste CORS              |
 
 ### Endpoints
+
+#### `GET /`
+
+Fornisce informazioni generali sull'API, versione ed elenco delle rotte disponibili.
+
+**Risposta di esempio:**
+
+```json
+{
+  "name": "Task API",
+  "version": "1.0.0",
+  "description": "REST API for task management",
+  "endpoints": { ... }
+}
+```
 
 #### `GET /health`
 
