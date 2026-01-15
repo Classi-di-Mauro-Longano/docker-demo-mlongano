@@ -1,3 +1,5 @@
+const cors = require('cors');
+
 const express = require('express');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -32,6 +34,25 @@ app.get('/health', (req, res) => {
   });
 });
 
+// API info endpoint
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Task API',
+    version: '1.0.0',
+    description: 'REST API for task management',
+    endpoints: {
+      health: 'GET /health',
+      tasks: {
+        list: 'GET /tasks',
+        get: 'GET /tasks/:id',
+        create: 'POST /tasks',
+        update: 'PUT /tasks/:id',
+        patch: 'PATCH /tasks/:id',
+        delete: 'DELETE /tasks/:id'
+      }
+    }
+  });
+});
 
 app.listen(PORT, HOST, () => {
   console.log(`
