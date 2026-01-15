@@ -8,6 +8,20 @@ const HOST = process.env.HOST || '0.0.0.0';
 // Inizializza Express
 const app = express();
 
+// CORS: permette richieste cross-origin (configurabile per produzione)
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Parser JSON per request body
+app.use(express.json({ limit: '10kb' }));  // Limita dimensione body per sicurezza
+
+// Parser URL-encoded (per form submissions)
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// ======= ROUTES =======
 // Healthcheck endpoint (usato da Docker e load balancer)
 app.get('/health', (req, res) => {
   res.json({
