@@ -63,7 +63,7 @@ app.post('/tasks', (req, res) => {
     const { title, description = null, priority = 'medium' } = req.body;
     console.log(req.body);
     console.log(title, description, priority);
-    
+
     const result = db.prepare(`
       INSERT INTO tasks (title, description, priority)
       VALUES (@title, @description, @priority)
@@ -86,10 +86,10 @@ app.post('/tasks', (req, res) => {
 app.listen(PORT, HOST, () => {
   console.log(`
 ╔═══════════════════════════════════════════════════════╗
-║                    Task API Server                     ║
+║                    Task API Server                    ║
 ╠═══════════════════════════════════════════════════════╣
-║  Status:      Running                                  ║
-║  URL:         http://${HOST}:${PORT.toString().padEnd(32)}║
+║  Status:      Running                                 ║
+║  URL:         http://${HOST}:${PORT.toString().padEnd(25)}║
 ║  Environment: ${NODE_ENV.padEnd(40)}║
 ║  Process ID:  ${process.pid.toString().padEnd(40)}║
 ╚═══════════════════════════════════════════════════════╝
