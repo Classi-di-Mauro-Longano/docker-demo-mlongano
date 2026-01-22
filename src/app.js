@@ -6,6 +6,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
+const { db, initializeDatabase } = require('./config/database');
 
 // Inizializza Express
 const app = express();
@@ -82,6 +83,11 @@ app.post('/tasks', (req, res) => {
     });
   }
 });
+
+
+// ===== Initialise the Database =====
+initializeDatabase();
+
 
 app.listen(PORT, HOST, () => {
   console.log(`
