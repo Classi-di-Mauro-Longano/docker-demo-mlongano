@@ -54,6 +54,35 @@ app.get('/', (req, res) => {
   });
 });
 
+app.post('/tasks', (req, res) => {
+
+  // Placeholder per creare un task
+
+
+  try {
+    const { title, description = null, priority = 'medium' } = req.body;
+    console.log(req.body);
+    console.log(title, description, priority);
+    
+    const result = db.prepare(`
+      INSERT INTO tasks (title, description, priority)
+      VALUES (@title, @description, @priority)
+    `).run({ title, description, priority });
+
+    // Recupera il task appena creato per restituirlo completo
+    const newTask = db.prepare('SELECT * FROM tasks WHERE id = ?').get(result.lastInsertRowid);
+
+    res.status(201).json({
+      message: 'Task created successfully',
+      data: newTask
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Internal Server Error'
+    });
+  }
+});
+
 app.listen(PORT, HOST, () => {
   console.log(`
 ╔═══════════════════════════════════════════════════════╗
