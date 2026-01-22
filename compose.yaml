@@ -41,7 +41,7 @@ services:
     volumes:
       # Volume nominato per persistenza database SQLite
       # I dati sopravvivono a 'docker compose down' (ma non a 'down -v')
-      - ./data:/app/data
+      - sqlite_data:/app/data
 
     # === HEALTHCHECK ===
     # Sovrascrive l'healthcheck del Dockerfile se necessario
