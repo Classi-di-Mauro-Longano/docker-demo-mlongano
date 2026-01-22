@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # DOCKERFILE - Task API (Node.js + SQLite)
-# 
+#
 # Multi-stage build per ottimizzare dimensione e sicurezza dell'immagine finale.
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -14,11 +14,11 @@ RUN apk add --no-cache python3 make g++
 WORKDIR /app
 
 # Copia solo i file necessari per installare le dipendenze
-# Questo layer viene cachato se package*.json non cambiano
-COPY package*.json ./
+# Questo layer viene cachato se package.json non cambia
+COPY package.json ./
 
-# Installa TUTTE le dipendenze (incluse devDependencies)
-RUN npm ci
+# Installa TUTTE le dipendenze e genera il package-lock.json
+RUN npm install
 
 # === STAGE 2: Production Dependencies ===
 # Installa solo le dipendenze di produzione
@@ -28,7 +28,8 @@ RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copia package.json e il package-lock.json generato dallo stage "deps"
+COPY --from=deps /app/package*.json ./
 
 # --omit=dev esclude le devDependencies
 RUN npm ci --omit=dev
