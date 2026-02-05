@@ -6,7 +6,7 @@
 
 # === STAGE 1: Dependencies ===
 # Installa tutte le dipendenze (dev + prod) per la build
-FROM node:20-alpine AS deps
+FROM node:24-alpine AS deps
 
 # better-sqlite3 richiede questi pacchetti per la compilazione nativa
 RUN apk add --no-cache python3 make g++
@@ -22,7 +22,7 @@ RUN npm install
 
 # === STAGE 2: Production Dependencies ===
 # Installa solo le dipendenze di produzione
-FROM node:20-alpine AS prod-deps
+FROM node:24-alpine AS prod-deps
 
 RUN apk add --no-cache python3 make g++
 
@@ -36,7 +36,7 @@ RUN npm ci --omit=dev
 
 # === STAGE 3: Final Image ===
 # Immagine finale minimale con solo il necessario per l'esecuzione
-FROM node:20-alpine AS runner
+FROM node:24-alpine AS runner
 
 # Metadati dell'immagine (OCI standard)
 LABEL org.opencontainers.image.title="Task API"
