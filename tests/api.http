@@ -11,3 +11,6 @@ Content-Type: application/json
   "title": "New Task",
   "description": "This is a new task."
 }
+
+###
+GET http://localhost:3000/tasks HTTP/1.1
