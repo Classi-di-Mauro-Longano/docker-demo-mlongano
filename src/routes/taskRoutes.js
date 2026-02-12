@@ -47,14 +47,22 @@ router.get('/', (req, res) => {
     // Placeholder per ottenere la lista dei task
     const tasks = db.prepare('SELECT * FROM tasks').all();
 
+router.get('/:id', (req, res) => {
+    const taskId = req.params.id;
+    // Placeholder per ottenere un singolo task
+    const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(taskId);
+    if (task) {
     res.status(200).json({
         meta: {
-            total: tasks.length,
             timestamp: new Date().toISOString()
-
         },
-        data: tasks
+            data: task
+        });
+    } else {
+        res.status(404).json({
+            error: 'Task not found'
     });
+    }
 });
 
 module.exports = router;
