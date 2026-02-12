@@ -15,52 +15,44 @@
 
 const express = require('express');
 const router = express.Router();
-const { db } = require('../config/database');
-const { getAllTasks } = require('../controllers/taskControllers');
 
-router.post('/', (req, res) => {
-    try {
-        const { title, description = null, priority = 'medium' } = req.body;
-        console.log(req.body);
-        console.log(title, description, priority);
+// Controller con la logica business
+const taskController = require('../controllers/taskController');
 
-        const result = db.prepare(`
-      INSERT INTO tasks (title, description, priority)
-      VALUES (@title, @description, @priority)
-    `).run({ title, description, priority });
+// === ROUTE DEFINITIONS ===
 
-        // Recupera il task appena creato per restituirlo completo
-        const newTask = db.prepare('SELECT * FROM tasks WHERE id = ?').get(result.lastInsertRowid);
+// GET /tasks - Lista task con filtri opzionali
+// Query params: completed, priority, limit, offset
+router.get('/',
+    taskController.getAllTasks
+);
 
-        res.status(200).json({
-            message: 'Task created successfully',
-            data: newTask
-        });
-    } catch (error) {
-        res.status(500).json({
-            error: 'Internal Server Error'
-        });
-    }
-});
+// GET /tasks/:id - Singolo task per ID
+router.get('/:id',
+    taskController.getTaskById
+);
 
-router.get('/', getAllTasks);
+// POST /tasks - Crea nuovo task
+// Body: { title: string, description?: string, priority?: 'low'|'medium'|'high' }
+router.post('/',
+    taskController.createTask
+);
 
-router.get('/:id', (req, res) => {
-    const taskId = req.params.id;
-    // Placeholder per ottenere un singolo task
-    const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(taskId);
-    if (task) {
-        res.status(200).json({
-            meta: {
-                timestamp: new Date().toISOString()
-            },
-            data: task
-        });
-    } else {
-        res.status(404).json({
-            error: 'Task not found'
-        });
-    }
-});
+// PUT /tasks/:id - Aggiornamento completo (tutti i campi richiesti)
+// Body: { title: string, description?: string, completed: boolean, priority: string }
+router.put('/:id',
+    taskController.updateTask
+);
+
+// PATCH /tasks/:id - Aggiornamento parziale (solo campi forniti)
+// Body: { title?: string, description?: string, completed?: boolean, priority?: string }
+router.patch('/:id',
+    taskController.patchTask
+);
+
+// DELETE /tasks/:id - Elimina task
+router.delete('/:id',
+    taskController.deleteTask
+);
 
 module.exports = router;
